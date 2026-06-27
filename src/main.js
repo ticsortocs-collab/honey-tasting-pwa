@@ -38,7 +38,7 @@ function tastingApp() {
       if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(reg => console.log('SW ready:', reg.scope))
     },
     async getDB() { return openDB('honey-tasting', 1, { upgrade(db) { db.createObjectStore('sessions', { keyPath: 'sessionId' }); db.createObjectStore('pending', { keyPath: 'id', autoIncrement: true }) } }) },
-    async saveSession() { const db = await this.getDB(); await db.put('sessions', { sessionId: this.sessionId, hotelId: this.hotelId, locationType: this.locationType, currentSample: this.currentSample, showComplete: this.showComplete, samples: this.samples, updatedAt: Date.now() }) },
+    async saveSession() { const db = await this.getDB(); await db.put('sessions', { sessionId: this.sessionId, hotelId: this.hotelId, locationType: this.locationType, currentSample: this.currentSample, showComplete: this.showComplete, samples: JSON.parse(JSON.stringify(this.samples)), updatedAt: Date.now() }) },
     async restoreSession() { const db = await this.getDB(); const saved = await db.get('sessions', this.sessionId); if (saved && saved.samples) { this.currentSample = saved.currentSample || 0; this.showComplete = saved.showComplete || false; this.samples = saved.samples.map((s, i) => ({ ...this.samples[i], ...s })) } },
     async clearSession() { const db = await this.getDB(); await db.delete('sessions', this.sessionId) },
     getRating(sampleId, attr) { const s = this.samples.find(x => x.sampleId === sampleId); return s?.ratings?.[attr] || 0 },
