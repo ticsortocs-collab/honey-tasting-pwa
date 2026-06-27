@@ -1,7 +1,7 @@
 import Alpine from 'alpinejs'
 import { openDB } from 'idb'
 window.Alpine = Alpine
-Alpine.start()
+
 const ATTRIBUTES = [
   { key: 'floral', label: 'Floral Intensity', description: 'How prominent are the flower/nectar aromas?' },
   { key: 'fruit', label: 'Fruit Notes', description: 'Stone fruit, citrus, berry, or dried fruit flavors' },
@@ -57,3 +57,6 @@ function tastingApp() {
     async syncPending() { try { const db = await this.getDB(); const pending = await db.getAll('pending'); for (const item of pending) { const res = await fetch('https://api.honeyhive.com/api/tasting/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item.payload) }); if (res.ok) await db.delete('pending', item.id) } } catch (e) { console.log('Offline - queued for sync:', e.message) } }
   }
 }
+
+Alpine.data('tastingApp', tastingApp)
+Alpine.start()
