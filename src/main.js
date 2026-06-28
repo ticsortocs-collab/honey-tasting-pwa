@@ -3,7 +3,7 @@ import { openDB } from 'idb'
 window.Alpine = Alpine
 
 // ── Update SUBMIT_URL when deployed. Leave null to save locally only. ──────
-const SUBMIT_URL = null  // e.g. 'https://script.google.com/macros/s/YOUR_ID/exec'
+const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycby-G45nngxIVQVHn8gjotoDkQTcummCw0Sibmm-OuOZuQtaqkMGUnB_JVV3DnkTalR4IA/exec'
 
 const ATTRIBUTES = [
   { key: 'aroma',      label: 'Aroma',       description: 'How does it smell? Floral, earthy, fruity, sweet?' },
