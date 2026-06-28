@@ -53,7 +53,7 @@ function tastingApp() {
       await db.put('sessions', {
         sessionId: this.sessionId, locationType: this.locationType,
         currentSample: this.currentSample, showComplete: this.showComplete,
-        email: this.email, emailSaved: this.emailSaved, surveyDone: this.surveyDone,
+        email: this.email, emailSaved: this.emailSaved,
         returningVisitor: this.returningVisitor,
         survey: { ...this.survey },
         samples: JSON.parse(JSON.stringify(this.samples)), updatedAt: Date.now()
@@ -68,7 +68,6 @@ function tastingApp() {
         this.showComplete  = saved.showComplete  || false
         this.email         = saved.email         || ''
         this.emailSaved       = saved.emailSaved       || false
-        this.surveyDone       = saved.surveyDone       || false
         this.returningVisitor = saved.returningVisitor || ''
         this.survey        = { ...this.survey, ...(saved.survey || {}) }
         this.samples = this.samples.map((s, i) => ({ ...s, ...saved.samples[i] }))
