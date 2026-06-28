@@ -155,8 +155,95 @@
         </div>
       </div>
 
-      <!-- Email capture -->
-      <div class="bg-white rounded-2xl border border-amber-200 p-5 mb-4 text-left" x-show="!emailSaved">
+      <!-- Returning visitor dropdown — always shown until profile saved -->
+      <div x-show="!emailSaved" class="bg-white rounded-2xl border border-amber-200 p-5 mb-4 text-left">
+        <label class="block text-sm font-semibold text-amber-900 mb-2">Have you tasted with us before?</label>
+        <select x-model="returningVisitor" class="w-full px-3 py-2.5 border border-amber-200 rounded-xl text-sm bg-amber-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+          <option value="">Select one…</option>
+          <option value="new">No — first time!</option>
+          <option value="returning">Yes — I've tasted with you before</option>
+        </select>
+      </div>
+
+      <!-- Market research questions — first-timers only, hidden after profile saved -->
+      <div x-show="returningVisitor === 'new' && !surveyDone" class="bg-white rounded-2xl border border-amber-200 p-5 mb-5 text-left space-y-5">
+        <p class="text-xs font-bold text-amber-700 uppercase tracking-wider">Quick questions — 1 min</p>
+
+        <div>
+          <p class="text-sm font-semibold text-amber-900 mb-2">Is taste a key factor when you buy honey, or do you just grab what's available?</p>
+          <div class="space-y-1.5">
+            <template x-for="opt in [
+              'Taste is very important — I seek out what I like',
+              'I mostly buy whatever is on the shelf',
+              'Price drives my decision more than taste',
+              'I never really thought about it'
+            ]" :key="opt">
+              <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-xl hover:bg-amber-50 transition">
+                <input type="radio" name="buyDecision" :value="opt" x-model="survey.buyDecision"
+                       class="mt-0.5 accent-amber-600 flex-shrink-0" />
+                <span class="text-sm text-stone-700" x-text="opt"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-sm font-semibold text-amber-900 mb-2">Have you ever bought a honey you didn't like as much as another?</p>
+          <div class="space-y-1.5">
+            <template x-for="opt in [
+              'Yes, several times',
+              'Yes, once or twice',
+              'Not really — I haven\'t compared much',
+              'I\'ve never thought to compare different honeys'
+            ]" :key="opt">
+              <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-xl hover:bg-amber-50 transition">
+                <input type="radio" name="hadBadHoney" :value="opt" x-model="survey.hadBadHoney"
+                       class="mt-0.5 accent-amber-600 flex-shrink-0" />
+                <span class="text-sm text-stone-700" x-text="opt"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-sm font-semibold text-amber-900 mb-2">How much more likely are you to buy a honey if you already know you love the taste?</p>
+          <div class="space-y-1.5">
+            <template x-for="opt in [
+              'Much more likely — that\'s the whole point',
+              'Somewhat more likely',
+              'About the same as usual',
+              'Doesn\'t really change my decision'
+            ]" :key="opt">
+              <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-xl hover:bg-amber-50 transition">
+                <input type="radio" name="likelierIfKnew" :value="opt" x-model="survey.likelierIfKnew"
+                       class="mt-0.5 accent-amber-600 flex-shrink-0" />
+                <span class="text-sm text-stone-700" x-text="opt"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-sm font-semibold text-amber-900 mb-2">If you knew you loved the taste, how likely are you to choose the pricier option?</p>
+          <div class="space-y-1.5">
+            <template x-for="opt in [
+              'Very likely — I\'d pay more for what I know I love',
+              'Maybe, if the price difference isn\'t too big',
+              'Unlikely — price still drives my choice',
+              'I wouldn\'t pay more regardless'
+            ]" :key="opt">
+              <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-xl hover:bg-amber-50 transition">
+                <input type="radio" name="payMoreIfLiked" :value="opt" x-model="survey.payMoreIfLiked"
+                       class="mt-0.5 accent-amber-600 flex-shrink-0" />
+                <span class="text-sm text-stone-700" x-text="opt"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email capture — shown once a selection is made -->
+      <div class="bg-white rounded-2xl border border-amber-200 p-5 mb-4 text-left" x-show="returningVisitor !== '' && !emailSaved">
         <p class="text-sm font-semibold text-amber-900 mb-1">Get matched to local honey you'll love</p>
         <p class="text-xs text-amber-600 mb-3">We'll notify you when your matched varietal is available from a local Mississippi beekeeper.</p>
         <div class="flex gap-2">
@@ -177,6 +264,11 @@
 
       <!-- Actions -->
       <div class="flex flex-col gap-3">
+        <!-- Return to taste more honeys — primary action after saving -->
+        <button x-show="emailSaved" @click="rateAnother()"
+                class="w-full py-3 bg-amber-700 text-white rounded-xl hover:bg-amber-800 transition font-bold text-sm shadow-sm">
+          ← Pick up another straw &amp; keep tasting
+        </button>
         <button @click="downloadCSV()"
                 class="w-full py-2.5 border border-amber-300 text-amber-700 rounded-xl hover:bg-amber-50 transition font-semibold text-sm">
           ⬇ Download My Tasting Results (.csv)

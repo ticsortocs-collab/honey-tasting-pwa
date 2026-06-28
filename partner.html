@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honeycutt Hives & Harvest — Kiosk Partner Application</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-amber-50 min-h-screen font-sans">
+
+<header class="bg-amber-900 text-white px-6 py-5">
+  <div class="max-w-2xl mx-auto">
+    <p class="text-amber-400 text-xs uppercase tracking-widest font-semibold mb-1">Honeycutt Hives &amp; Harvest</p>
+    <h1 class="text-2xl font-bold">Kiosk Partner Application</h1>
+    <p class="text-amber-300 text-sm mt-1">Host a honey tasting station — zero inventory risk, new revenue, and something your customers will talk about.</p>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-6 py-8 space-y-6" id="formWrap">
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Your Business</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2">
+        <label class="label">Business Name *</label>
+        <input id="business" type="text" class="inp" placeholder="Main Street Market" required />
+      </div>
+      <div class="col-span-2">
+        <label class="label">Business Type *</label>
+        <select id="biztype" class="inp" required>
+          <option value="">Select one…</option>
+          <option>Grocery / Specialty Food Store</option>
+          <option>Gift Shop / Boutique</option>
+          <option>Coffee Shop / Café</option>
+          <option>Farmers Market</option>
+          <option>Hotel / B&amp;B</option>
+          <option>Pharmacy / Health Store</option>
+          <option>Restaurant / Bar</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="col-span-2">
+        <label class="label">Location (Address / City, State) *</label>
+        <input id="location" type="text" class="inp" placeholder="123 Main St, Vicksburg, MS" required />
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Contact</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Your Name *</label>
+        <input id="name" type="text" class="inp" placeholder="Jane Smith" required />
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Your Title / Role</label>
+        <input id="role" type="text" class="inp" placeholder="Owner / Manager" />
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Email *</label>
+        <input id="email" type="email" class="inp" placeholder="you@yourbusiness.com" required />
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Phone</label>
+        <input id="phone" type="tel" class="inp" placeholder="(601) 555-0100" />
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Kiosk Fit</h2>
+
+    <div>
+      <label class="label">Estimated Daily Customer / Foot Traffic</label>
+      <select id="traffic" class="inp">
+        <option value="">Select range…</option>
+        <option>Under 50 people/day</option>
+        <option>50–150 people/day</option>
+        <option>150–500 people/day</option>
+        <option>500+ people/day</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="label">Available Space for a Kiosk / Display</label>
+      <select id="space" class="inp">
+        <option value="">Select…</option>
+        <option>Counter / Point-of-sale area (small)</option>
+        <option>End-cap shelf or table (medium)</option>
+        <option>Dedicated display area (large)</option>
+        <option>Not sure — let's discuss</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="label">Who are your typical customers?</label>
+      <input id="demographic" type="text" class="inp" placeholder="e.g. Local families, health-conscious shoppers, tourists…" />
+    </div>
+
+    <div>
+      <label class="label">Preferred Partnership Model (check all that apply)</label>
+      <div class="grid grid-cols-2 gap-2 mt-2">
+        <label class="check-row"><input type="checkbox" id="mod_consignment" class="chk" /> Consignment (we stock it, you keep a %)</label>
+        <label class="check-row"><input type="checkbox" id="mod_wholesale" class="chk" /> Wholesale (buy at cost, sell at retail)</label>
+        <label class="check-row"><input type="checkbox" id="mod_revshare" class="chk" /> Revenue Share on QR-code sales</label>
+        <label class="check-row"><input type="checkbox" id="mod_events" class="chk" /> Hosted Tasting Events</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Anything else?</h2>
+    <textarea id="notes" class="inp h-24 resize-none" placeholder="Tell us why this could be a great fit, or any questions you have…"></textarea>
+  </div>
+
+  <div id="errMsg" class="hidden text-red-600 text-sm font-medium"></div>
+
+  <button onclick="submit()" class="w-full py-3.5 bg-amber-900 text-white rounded-xl font-bold text-base hover:bg-amber-800 transition shadow-sm">
+    Submit Application →
+  </button>
+  <p class="text-center text-xs text-amber-500">We'll follow up within 2 business days to schedule a walkthrough.</p>
+</main>
+
+<div id="thanks" class="hidden max-w-2xl mx-auto px-6 py-20 text-center">
+  <div class="text-6xl mb-4">🤝</div>
+  <h2 class="text-2xl font-bold text-amber-900 mb-2">Application Received!</h2>
+  <p class="text-amber-700 mb-6">We're excited about the potential partnership. Expect to hear from us within 2 business days.</p>
+  <a href="/" class="text-amber-600 text-sm underline">Back to tasting →</a>
+</div>
+
+<style>
+  .label { display:block; font-size:13px; font-weight:600; color:#92400e; margin-bottom:5px; }
+  .inp { width:100%; padding:10px 12px; border:1px solid #fcd34d; border-radius:10px; font-size:14px; background:#fffbeb; color:#1c1917; outline:none; }
+  .inp:focus { border-color:#d97706; box-shadow:0 0 0 3px rgba(217,119,6,.15); }
+  select.inp { appearance:auto; }
+  .check-row { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:#44403c; cursor:pointer; padding:4px 0; line-height:1.4; }
+  .chk { width:16px; height:16px; margin-top:1px; accent-color:#d97706; flex-shrink:0; }
+</style>
+
+<script>
+const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycby-G45nngxIVQVHn8gjotoDkQTcummCw0Sibmm-OuOZuQtaqkMGUnB_JVV3DnkTalR4IA/exec'
+
+function checked(id) { return document.getElementById(id).checked }
+function val(id)     { return document.getElementById(id).value.trim() }
+
+async function submit() {
+  const business = val('business'), name = val('name'), email = val('email'), location = val('location')
+  const err = document.getElementById('errMsg')
+  if (!business || !name || !email || !location) {
+    err.textContent = 'Please fill in all required fields.'; err.classList.remove('hidden'); return
+  }
+  err.classList.add('hidden')
+
+  const payload = {
+    type: 'partner',
+    business, biztype: val('biztype'), location,
+    name, role: val('role'), email, phone: val('phone'),
+    traffic: val('traffic'), space: val('space'), demographic: val('demographic'),
+    model: ['consignment','wholesale','revshare','events']
+      .filter(m => checked('mod_' + m)).join(', '),
+    notes: val('notes'),
+    submittedAt: new Date().toISOString()
+  }
+
+  try {
+    await fetch(SUBMIT_URL, { method:'POST', body: JSON.stringify(payload) })
+  } catch(e) { /* CORS on response is expected — data still posts */ }
+
+  document.getElementById('formWrap').classList.add('hidden')
+  document.getElementById('thanks').classList.remove('hidden')
+}
+</script>
+</body>
+</html>

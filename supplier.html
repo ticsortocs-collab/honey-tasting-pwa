@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honeycutt Hives & Harvest — Beekeeper Application</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-amber-50 min-h-screen font-sans">
+
+<header class="bg-amber-700 text-white px-6 py-5">
+  <div class="max-w-2xl mx-auto">
+    <p class="text-amber-300 text-xs uppercase tracking-widest font-semibold mb-1">Honeycutt Hives &amp; Harvest</p>
+    <h1 class="text-2xl font-bold">Beekeeper / Supplier Application</h1>
+    <p class="text-amber-200 text-sm mt-1">Join our local honey marketplace — we connect your hives to customers who'll love your honey.</p>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-6 py-8 space-y-6" id="formWrap">
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Your Information</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Your Name *</label>
+        <input id="name" type="text" class="inp" placeholder="Greg Honeycutt" required />
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Business / Apiary Name</label>
+        <input id="business" type="text" class="inp" placeholder="Honeycutt Hives & Harvest" />
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Email *</label>
+        <input id="email" type="email" class="inp" placeholder="you@example.com" required />
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <label class="label">Phone</label>
+        <input id="phone" type="tel" class="inp" placeholder="(601) 555-0100" />
+      </div>
+      <div class="col-span-2">
+        <label class="label">Location (City, State) *</label>
+        <input id="location" type="text" class="inp" placeholder="Vicksburg, Mississippi" required />
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Your Bees &amp; Honey</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="label">Years Beekeeping</label>
+        <input id="years" type="number" min="0" class="inp" placeholder="3" />
+      </div>
+      <div>
+        <label class="label">Number of Hives</label>
+        <input id="hives" type="number" min="1" class="inp" placeholder="6" />
+      </div>
+      <div class="col-span-2">
+        <label class="label">Varietals You Produce *</label>
+        <input id="varietals" type="text" class="inp" placeholder="Wildflower, Clover, Tulip Poplar, Gallberry…" required />
+      </div>
+      <div class="col-span-2">
+        <label class="label">Estimated Annual Production (lbs)</label>
+        <input id="production" type="text" class="inp" placeholder="200 lbs" />
+      </div>
+      <div class="col-span-2">
+        <label class="label">Harvest Season(s)</label>
+        <input id="harvest" type="text" class="inp" placeholder="Spring (April–May), Fall (Sept–Oct)" />
+      </div>
+    </div>
+
+    <div>
+      <label class="label">Certifications / Attributes (check all that apply)</label>
+      <div class="grid grid-cols-2 gap-2 mt-2">
+        <label class="check-row"><input type="checkbox" id="cert_raw" class="chk" /> Raw &amp; Unfiltered</label>
+        <label class="check-row"><input type="checkbox" id="cert_local" class="chk" /> Locally Sourced</label>
+        <label class="check-row"><input type="checkbox" id="cert_organic" class="chk" /> USDA Organic</label>
+        <label class="check-row"><input type="checkbox" id="cert_inspected" class="chk" /> State Inspected</label>
+        <label class="check-row"><input type="checkbox" id="cert_creamed" class="chk" /> Creamed / Whipped</label>
+        <label class="check-row"><input type="checkbox" id="cert_infused" class="chk" /> Infused Varietals</label>
+      </div>
+    </div>
+
+    <div>
+      <label class="label">Approximate Wholesale Price (per lb)</label>
+      <input id="price" type="text" class="inp" placeholder="$8–$12 / lb" />
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Your Story</h2>
+    <div>
+      <label class="label">What makes your honey special?</label>
+      <textarea id="story" class="inp h-24 resize-none" placeholder="Tell us about your land, your bees, your methods — this is what customers connect with."></textarea>
+    </div>
+
+    <div>
+      <label class="label">I'm interested in (check all that apply)</label>
+      <div class="grid grid-cols-2 gap-2 mt-2">
+        <label class="check-row"><input type="checkbox" id="int_marketplace" class="chk" /> Online Marketplace Listing</label>
+        <label class="check-row"><input type="checkbox" id="int_subscription" class="chk" /> Subscription Program</label>
+        <label class="check-row"><input type="checkbox" id="int_wholesale" class="chk" /> Wholesale / Bulk Orders</label>
+        <label class="check-row"><input type="checkbox" id="int_kiosk" class="chk" /> Kiosk / In-Store Placement</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-5">
+    <h2 class="font-bold text-amber-900 text-base border-b border-amber-100 pb-2">Your Beekeeping Experience</h2>
+
+    <div>
+      <label class="label">What's your favorite part of being a beekeeper? (check all that apply)</label>
+      <div class="grid grid-cols-2 gap-2 mt-2">
+        <label class="check-row"><input type="checkbox" id="fav_tending" class="chk" /> Tending the bees &amp; seeing them thrive</label>
+        <label class="check-row"><input type="checkbox" id="fav_eating" class="chk" /> Eating the honey</label>
+        <label class="check-row"><input type="checkbox" id="fav_community" class="chk" /> The beekeeper community</label>
+        <label class="check-row"><input type="checkbox" id="fav_environment" class="chk" /> Helping pollination &amp; the environment</label>
+        <label class="check-row"><input type="checkbox" id="fav_teaching" class="chk" /> Teaching others about bees</label>
+        <label class="check-row"><input type="checkbox" id="fav_income" class="chk" /> The extra income</label>
+        <label class="check-row"><input type="checkbox" id="fav_meditation" class="chk" /> The calm / meditative aspect</label>
+        <label class="check-row"><input type="checkbox" id="fav_crafts" class="chk" /> Making products (candles, soap, mead…)</label>
+      </div>
+    </div>
+
+    <div>
+      <label class="label">What's your least favorite part? (check all that apply)</label>
+      <div class="grid grid-cols-2 gap-2 mt-2">
+        <label class="check-row"><input type="checkbox" id="dis_inspection" class="chk" /> Hive inspection</label>
+        <label class="check-row"><input type="checkbox" id="dis_cost" class="chk" /> The cost</label>
+        <label class="check-row"><input type="checkbox" id="dis_harvesting" class="chk" /> Harvesting the honey</label>
+        <label class="check-row"><input type="checkbox" id="dis_processing" class="chk" /> Processing &amp; bottling</label>
+        <label class="check-row"><input type="checkbox" id="dis_selling" class="chk" /> Selling the honey</label>
+        <label class="check-row"><input type="checkbox" id="dis_stings" class="chk" /> Getting stung</label>
+        <label class="check-row"><input type="checkbox" id="dis_disease" class="chk" /> Dealing with disease / mites</label>
+        <label class="check-row"><input type="checkbox" id="dis_record" class="chk" /> Record keeping &amp; compliance</label>
+      </div>
+    </div>
+
+    <div>
+      <label class="label">If someone could handle the part you dislike, would you add more hives?</label>
+      <div class="flex gap-6 mt-2">
+        <label class="check-row"><input type="radio" name="wouldAddHives" value="yes" class="chk" /> Yes, definitely</label>
+        <label class="check-row"><input type="radio" name="wouldAddHives" value="maybe" class="chk" /> Maybe</label>
+        <label class="check-row"><input type="radio" name="wouldAddHives" value="no" class="chk" /> Probably not</label>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2">
+        <label class="label">If you're comfortable sharing — how much honey do you typically produce each year?</label>
+        <select id="annualYield" class="inp">
+          <option value="">Select a range…</option>
+          <option>Under 50 lbs</option>
+          <option>50–100 lbs</option>
+          <option>100–250 lbs</option>
+          <option>250–500 lbs</option>
+          <option>500–1,000 lbs</option>
+          <option>1,000+ lbs</option>
+        </select>
+      </div>
+
+      <div class="col-span-2">
+        <label class="label">Do you currently sell honey wholesale / in bulk?</label>
+        <div class="flex gap-6 mt-2">
+          <label class="check-row"><input type="radio" name="sellsWholesale" value="yes" class="chk" /> Yes</label>
+          <label class="check-row"><input type="radio" name="sellsWholesale" value="no" class="chk" /> No</label>
+          <label class="check-row"><input type="radio" name="sellsWholesale" value="open" class="chk" /> Not yet, but open to it</label>
+        </div>
+      </div>
+
+      <div>
+        <label class="label">Retail / consumer price per lb <span class="font-normal text-amber-500">(if comfortable)</span></label>
+        <input id="consumerPrice" type="text" class="inp" placeholder="e.g. $14 / lb" />
+      </div>
+      <div>
+        <label class="label">Bulk / wholesale price per lb <span class="font-normal text-amber-500">(if comfortable)</span></label>
+        <input id="bulkPrice" type="text" class="inp" placeholder="e.g. $8 / lb" />
+      </div>
+    </div>
+  </div>
+
+  <div id="errMsg" class="hidden text-red-600 text-sm font-medium"></div>
+
+  <button onclick="submit()" class="w-full py-3.5 bg-amber-700 text-white rounded-xl font-bold text-base hover:bg-amber-800 transition shadow-sm">
+    Submit Application →
+  </button>
+  <p class="text-center text-xs text-amber-500">We'll follow up within 2 business days.</p>
+</main>
+
+<div id="thanks" class="hidden max-w-2xl mx-auto px-6 py-20 text-center">
+  <div class="text-6xl mb-4">🍯</div>
+  <h2 class="text-2xl font-bold text-amber-900 mb-2">Application Received!</h2>
+  <p class="text-amber-700 mb-6">Thanks for reaching out. We'll be in touch within 2 business days to discuss next steps.</p>
+  <a href="/" class="text-amber-600 text-sm underline">Back to tasting →</a>
+</div>
+
+<style>
+  .label { display:block; font-size:13px; font-weight:600; color:#92400e; margin-bottom:5px; }
+  .inp { width:100%; padding:10px 12px; border:1px solid #fcd34d; border-radius:10px; font-size:14px; background:#fffbeb; color:#1c1917; outline:none; }
+  .inp:focus { border-color:#d97706; box-shadow:0 0 0 3px rgba(217,119,6,.15); }
+  .check-row { display:flex; align-items:center; gap:8px; font-size:13px; color:#44403c; cursor:pointer; padding:4px 0; }
+  .chk { width:16px; height:16px; accent-color:#d97706; }
+</style>
+
+<script>
+const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycby-G45nngxIVQVHn8gjotoDkQTcummCw0Sibmm-OuOZuQtaqkMGUnB_JVV3DnkTalR4IA/exec'
+
+function checked(id) { return document.getElementById(id).checked }
+function val(id)     { return document.getElementById(id).value.trim() }
+
+async function submit() {
+  const name = val('name'), email = val('email'), location = val('location'), varietals = val('varietals')
+  const err = document.getElementById('errMsg')
+  if (!name || !email || !location || !varietals) {
+    err.textContent = 'Please fill in all required fields.'; err.classList.remove('hidden'); return
+  }
+  err.classList.add('hidden')
+
+  const radio = name => (document.querySelector(`input[name="${name}"]:checked`) || {}).value || ''
+
+  const payload = {
+    type: 'supplier',
+    name, business: val('business'), email, phone: val('phone'), location,
+    years: val('years'), hives: val('hives'), varietals, production: val('production'),
+    harvest: val('harvest'), price: val('price'), story: val('story'),
+    certifications: ['raw','local','organic','inspected','creamed','infused']
+      .filter(c => checked('cert_' + c)).join(', '),
+    interest: ['marketplace','subscription','wholesale','kiosk']
+      .filter(i => checked('int_' + i)).join(', '),
+    favoriteParts: ['tending','eating','community','environment','teaching','income','meditation','crafts']
+      .filter(f => checked('fav_' + f)).join(', '),
+    leastFavoriteParts: ['inspection','cost','harvesting','processing','selling','stings','disease','record']
+      .filter(d => checked('dis_' + d)).join(', '),
+    wouldAddHives: radio('wouldAddHives'),
+    annualYield: val('annualYield'),
+    sellsWholesale: radio('sellsWholesale'),
+    consumerPrice: val('consumerPrice'),
+    bulkPrice: val('bulkPrice'),
+    submittedAt: new Date().toISOString()
+  }
+
+  try {
+    await fetch(SUBMIT_URL, { method:'POST', body: JSON.stringify(payload) })
+  } catch(e) { /* Apps Script CORS on response — data still lands */ }
+
+  document.getElementById('formWrap').classList.add('hidden')
+  document.getElementById('thanks').classList.remove('hidden')
+}
+</script>
+</body>
+</html>

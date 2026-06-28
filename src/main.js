@@ -24,7 +24,8 @@ function tastingApp() {
     currentSample: 0, showComplete: false,
     attributes: ATTRIBUTES, samples: [],
     sessionId: null, locationType: 'chamber-event',
-    email: '', emailSaved: false,
+    email: '', emailSaved: false, surveyDone: false, returningVisitor: '',
+    survey: { buyDecision: '', hadBadHoney: '', likelierIfKnew: '', payMoreIfLiked: '' },
 
     async init() {
       this.sessionId = 'SESSION-' + Date.now().toString(36).toUpperCase()
@@ -52,7 +53,9 @@ function tastingApp() {
       await db.put('sessions', {
         sessionId: this.sessionId, locationType: this.locationType,
         currentSample: this.currentSample, showComplete: this.showComplete,
-        email: this.email,
+        email: this.email, emailSaved: this.emailSaved, surveyDone: this.surveyDone,
+        returningVisitor: this.returningVisitor,
+        survey: { ...this.survey },
         samples: JSON.parse(JSON.stringify(this.samples)), updatedAt: Date.now()
       })
     },
@@ -64,6 +67,10 @@ function tastingApp() {
         this.currentSample = saved.currentSample || 0
         this.showComplete  = saved.showComplete  || false
         this.email         = saved.email         || ''
+        this.emailSaved       = saved.emailSaved       || false
+        this.surveyDone       = saved.surveyDone       || false
+        this.returningVisitor = saved.returningVisitor || ''
+        this.survey        = { ...this.survey, ...(saved.survey || {}) }
         this.samples = this.samples.map((s, i) => ({ ...s, ...saved.samples[i] }))
       }
     },
@@ -118,7 +125,9 @@ function tastingApp() {
     async submitResults() {
       const payload = {
         sessionId: this.sessionId, locationType: this.locationType,
-        email: this.email, completedAt: new Date().toISOString(),
+        email: this.email, returningVisitor: this.returningVisitor,
+        completedAt: new Date().toISOString(),
+        survey: { ...this.survey },
         samples: this.samples.map(s => ({
           sampleId: s.sampleId, varietal: s.varietal, brand: s.brand,
           ratings: s.ratings, overall: s.overall, buyAgain: s.buyAgain, notes: s.notes
@@ -140,6 +149,15 @@ function tastingApp() {
       const db = await this.getDB()
       await db.put('sessions', { ...payload, sessionId: this.sessionId, updatedAt: Date.now() })
       this.emailSaved = true
+      this.surveyDone = true
+      this.saveSession()
+    },
+
+    rateAnother() {
+      const firstUnrated = this.samples.findIndex(s => !s.overall)
+      this.currentSample = firstUnrated >= 0 ? firstUnrated : 0
+      this.showComplete = false
+      this.saveSession()
     },
 
     downloadCSV() {
