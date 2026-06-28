@@ -19,12 +19,19 @@ function onOpen() {
 
 // ── POST router ───────────────────────────────────────────────────────────
 function doPost(e) {
-  const data = JSON.parse(e.postData.contents)
-  const ss   = SpreadsheetApp.getActiveSpreadsheet()
-  if      (data.type === 'supplier') appendSupplier(ss, data)
-  else if (data.type === 'partner')  appendPartner(ss, data)
-  else                               appendTasting(ss, data)
-  return ContentService.createTextResponse('ok')
+  try {
+    const data = JSON.parse(e.postData.contents)
+    Logger.log('doPost received type: ' + data.type + ' from: ' + data.email)
+    const ss = SpreadsheetApp.getActiveSpreadsheet()
+    if      (data.type === 'supplier') appendSupplier(ss, data)
+    else if (data.type === 'partner')  appendPartner(ss, data)
+    else                               appendTasting(ss, data)
+    Logger.log('doPost success')
+    return ContentService.createTextResponse('ok')
+  } catch(err) {
+    Logger.log('doPost ERROR: ' + err.message)
+    return ContentService.createTextResponse('error: ' + err.message)
+  }
 }
 
 // ── Consumer tasting results ───────────────────────────────────────────────
