@@ -29,10 +29,10 @@ function doPost(e) {
     else if (data.type === 'partner')  appendPartner(ss, data)
     else                               appendTasting(ss, data)
     log.appendRow([new Date(), data.type || 'tasting', data.email || '', 'OK', ''])
-    return ContentService.createTextResponse('ok')
+    return ContentService.createTextOutput('ok')
   } catch(err) {
     log.appendRow([new Date(), '?', '', 'ERROR', err.message])
-    return ContentService.createTextResponse('error: ' + err.message)
+    return ContentService.createTextOutput('error: ' + err.message)
   }
 }
 
