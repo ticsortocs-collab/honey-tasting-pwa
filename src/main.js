@@ -24,7 +24,7 @@ function tastingApp() {
     currentSample: 0, showComplete: false,
     attributes: ATTRIBUTES, samples: [],
     sessionId: null, locationType: 'chamber-event',
-    email: '', emailSaved: false, surveyDone: false, returningVisitor: '', submitting: false,
+    email: '', emailSaved: false, surveyDone: false, visitorType: '', submitting: false,
     survey: { buyDecision: '', hadBadHoney: '', tasteValuedAction: '' },
 
     async init() {
@@ -54,7 +54,7 @@ function tastingApp() {
         sessionId: this.sessionId, locationType: this.locationType,
         currentSample: this.currentSample, showComplete: this.showComplete,
         email: this.email, emailSaved: this.emailSaved,
-        returningVisitor: this.returningVisitor,
+        visitorType: this.visitorType,
         survey: { ...this.survey },
         samples: JSON.parse(JSON.stringify(this.samples)), updatedAt: Date.now()
       })
@@ -68,7 +68,7 @@ function tastingApp() {
         this.showComplete  = saved.showComplete  || false
         this.email         = saved.email         || ''
         this.emailSaved       = saved.emailSaved       || false
-        this.returningVisitor = saved.returningVisitor || ''
+        this.visitorType = saved.visitorType || ''
         this.survey        = { ...this.survey, ...(saved.survey || {}) }
         this.samples = this.samples.map((s, i) => ({ ...s, ...saved.samples[i] }))
       }
@@ -126,7 +126,7 @@ function tastingApp() {
       this.submitting = true
       const payload = {
         sessionId: this.sessionId, locationType: this.locationType,
-        email: this.email, returningVisitor: this.returningVisitor,
+        email: this.email, visitorType: this.visitorType,
         completedAt: new Date().toISOString(),
         survey: { ...this.survey },
         samples: this.samples.map(s => ({
