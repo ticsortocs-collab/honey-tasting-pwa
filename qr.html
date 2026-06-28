@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honeycutt — Tasting QR Codes</title>
+<style>
+  body { margin: 0; background: #1c0a00; font-family: Arial, sans-serif; color: #fde68a; text-align: center; padding: 24px 16px; }
+  h1  { font-size: 18px; letter-spacing: 2px; text-transform: uppercase; color: #fcd34d; margin: 0 0 4px; }
+  p   { font-size: 12px; color: #92400e; margin: 0 0 28px; }
+  .grid { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .card { background: #fef3c7; border-radius: 16px; padding: 20px 16px 14px; width: 200px; }
+  .card img { width: 170px; height: 170px; border-radius: 8px; display: block; margin: 0 auto 10px; }
+  .num  { font-size: 28px; font-weight: 900; color: #d97706; line-height: 1; }
+  .name { font-size: 13px; font-weight: 700; color: #92400e; margin: 2px 0; }
+  .brand{ font-size: 11px; color: #b45309; }
+  .url  { margin-top: 28px; font-size: 11px; color: #713f12; background: #fef9c3; border-radius: 8px; padding: 8px 16px; display: inline-block; word-break: break-all; }
+  .btn  { margin-top: 24px; padding: 12px 32px; background: #d97706; color: #1c0a00; border: none; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; letter-spacing: .5px; }
+  @media print { .btn, p, .url { display: none; } body { background: white; color: #1c0a00; } h1 { color: #92400e; } }
+</style>
+</head>
+<body>
+<h1>🍯 Honeycutt Hives &amp; Harvest</h1>
+<p>Honey Tasting — scan with your phone to begin</p>
+
+<div class="grid" id="grid"></div>
+<div class="url" id="urlDisplay"></div>
+<br>
+<button class="btn" onclick="window.print()">🖨 Print QR Codes</button>
+
+<script>
+const STRAWS = [
+  { id: 'STRAW-01', name: 'Raw Honey',    brand: "Bee's Knees" },
+  { id: 'STRAW-02', name: 'Salted Honey', brand: "Bee's Knees" },
+  { id: 'STRAW-03', name: 'Wildflower',   brand: 'Homestead Honey' },
+]
+
+const base = window.location.origin
+document.getElementById('urlDisplay').textContent = 'App URL: ' + base
+
+const grid = document.getElementById('grid')
+STRAWS.forEach((s, i) => {
+  const url     = `${base}/?kit=${s.id}`
+  const encoded = encodeURIComponent(url)
+  const qrSrc   = `https://api.qrserver.com/v1/create-qr-code/?size=340x340&margin=10&data=${encoded}`
+
+  const card = document.createElement('div')
+  card.className = 'card'
+  card.innerHTML = `
+    <img src="${qrSrc}" alt="QR for ${s.id}" />
+    <div class="num">0${i + 1}</div>
+    <div class="name">${s.name}</div>
+    <div class="brand">${s.brand}</div>
+  `
+  grid.appendChild(card)
+})
+</script>
+</body>
+</html>

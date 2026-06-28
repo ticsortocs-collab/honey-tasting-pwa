@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Honeycutt Hives &amp; Harvest — Tasting Cards (Print)</title>
+<style>
+  /* ── update APP_URL before printing ─────────────────────────────────────── */
+  /* Run: npm run dev  →  use http://YOUR-LAN-IP:5173 or your deployed URL    */
+
+  :root {
+    --gold:   #92400e;
+    --amber:  #d97706;
+    --light:  #fef3c7;
+    --cream:  #fffbeb;
+    --border: #fcd34d;
+    --text:   #1c1917;
+    --muted:  #78716c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f5f5f0;
+    font-family: 'Georgia', serif;
+    padding: 20px;
+  }
+
+  h1.page-title {
+    text-align: center;
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  p.page-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 24px;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(146,64,14,.10);
+    page-break-inside: avoid;
+  }
+
+  /* honey-amber header band */
+  .card-header {
+    background: linear-gradient(135deg, #92400e 0%, #b45309 60%, #d97706 100%);
+    padding: 14px 16px 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* subtle hex watermark */
+  .card-header::before {
+    content: '⬡';
+    position: absolute;
+    right: -10px; top: -14px;
+    font-size: 80px;
+    color: rgba(255,255,255,.07);
+    line-height: 1;
+  }
+
+  .brand-name {
+    color: #fde68a;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+  }
+  .straw-id {
+    color: rgba(255,255,255,.5);
+    font-size: 9px;
+    font-family: 'Courier New', monospace;
+    float: right;
+    margin-top: -12px;
+  }
+  .varietal {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.15;
+    margin-top: 4px;
+  }
+  .producer {
+    color: #fcd34d;
+    font-size: 11px;
+    font-family: 'Arial', sans-serif;
+    margin-top: 2px;
+  }
+  .honey-note {
+    color: rgba(255,255,255,.7);
+    font-size: 10px;
+    font-style: italic;
+    font-family: 'Arial', sans-serif;
+    margin-top: 4px;
+  }
+
+  /* body */
+  .card-body {
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .guide {
+    flex: 1;
+  }
+  .guide-title {
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--amber);
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .guide-item {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 4px;
+    font-size: 9.5px;
+    font-family: 'Arial', sans-serif;
+    color: var(--text);
+  }
+  .guide-dot {
+    width: 5px; height: 5px;
+    background: var(--amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .guide-label { font-weight: 700; }
+  .guide-desc  { color: var(--muted); font-size: 9px; }
+
+  .qr-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .qr-area img {
+    width: 80px; height: 80px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    display: block;
+  }
+  .qr-label {
+    font-size: 8px;
+    color: var(--muted);
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* footer */
+  .card-footer {
+    background: var(--light);
+    border-top: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rate-scale {
+    font-size: 8.5px;
+    color: var(--muted);
+    font-family: 'Arial', sans-serif;
+  }
+  .rate-scale strong { color: var(--gold); }
+  .sample-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--border);
+    font-family: 'Arial Black', sans-serif;
+    line-height: 1;
+  }
+
+  /* ── print styles ──────────────────────────────────────────────────────── */
+  @media print {
+    body { background: white; padding: 8px; }
+    h1.page-title, p.page-sub, .screen-only { display: none; }
+    .card-grid { gap: 12px; }
+    .card { box-shadow: none; }
+  }
+
+  /* screen helper */
+  .screen-only {
+    text-align: center;
+    margin-top: 28px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Arial', sans-serif;
+  }
+  .screen-only strong { color: var(--gold); }
+  .print-btn {
+    display: inline-block;
+    margin: 12px auto 0;
+    padding: 10px 24px;
+    background: var(--amber);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: .5px;
+  }
+  .url-note {
+    background: #fef9c3;
+    border: 1px solid #fde047;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 0 auto 20px;
+    max-width: 700px;
+    font-size: 12px;
+    font-family: 'Arial', sans-serif;
+    color: #713f12;
+  }
+  .url-note code { background: #fef08a; padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">🍯 Honeycutt Hives &amp; Harvest</h1>
+<p class="page-sub">Honey Tasting Experience — Sample Cards · Print on cardstock, cut, attach to straw</p>
+
+<div class="url-note screen-only">
+  <strong>Before printing:</strong> replace <code>YOUR-APP-URL</code> in the QR codes below with your actual tasting app URL.<br>
+  Running locally? Use <code>http://192.168.YOUR.IP:5173</code> · Deployed? Use your Netlify / Vercel URL.
+  Each QR encodes: <code>https://YOUR-APP-URL/?kit=STRAW-01</code> etc.
+</div>
+
+<div class="card-grid">
+
+  <!-- ── STRAW 01 ────────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="brand-name">Bee's Knees <span class="straw-id">STRAW-01</span></div>
+      <div class="varietal">Raw Honey</div>
+      <div class="producer">Bee's Knees Apiaries</div>
+      <div class="honey-note">Pure, unprocessed — the benchmark</div>
+    </div>
+    <div class="card-body">
+      <div class="guide">
+        <div class="guide-title">Rate 1–5 on each:</div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Aroma</span><span class="guide-desc"> — smell before tasting</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Sweetness</span><span class="guide-desc"> — light vs bold</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Body</span><span class="guide-desc"> — thin vs syrupy</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Finish</span><span class="guide-desc"> — fades vs lingers</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Would seek out</span><span class="guide-desc"> — vs grocery honey</span></div>
+      </div>
+      <div class="qr-area">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=8&data=https%3A%2F%2FYOUR-APP-URL%2F%3Fkit%3DSTRAW-01"
+             alt="QR code for STRAW-01" />
+        <div class="qr-label">Scan to<br>rate this<br>sample</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="rate-scale"><strong>1</strong> = low &nbsp;·&nbsp; <strong>5</strong> = high</div>
+      <div class="sample-num">01</div>
+    </div>
+  </div>
+
+  <!-- ── STRAW 02 ────────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="brand-name">Bee's Knees <span class="straw-id">STRAW-02</span></div>
+      <div class="varietal">Salted Honey</div>
+      <div class="producer">Bee's Knees Apiaries</div>
+      <div class="honey-note">Sea salt finish — sweet meets savory</div>
+    </div>
+    <div class="card-body">
+      <div class="guide">
+        <div class="guide-title">Rate 1–5 on each:</div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Aroma</span><span class="guide-desc"> — smell before tasting</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Sweetness</span><span class="guide-desc"> — light vs bold</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Body</span><span class="guide-desc"> — thin vs syrupy</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Finish</span><span class="guide-desc"> — fades vs lingers</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Would seek out</span><span class="guide-desc"> — vs grocery honey</span></div>
+      </div>
+      <div class="qr-area">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=8&data=https%3A%2F%2FYOUR-APP-URL%2F%3Fkit%3DSTRAW-02"
+             alt="QR code for STRAW-02" />
+        <div class="qr-label">Scan to<br>rate this<br>sample</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="rate-scale"><strong>1</strong> = low &nbsp;·&nbsp; <strong>5</strong> = high</div>
+      <div class="sample-num">02</div>
+    </div>
+  </div>
+
+  <!-- ── STRAW 03 ────────────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="brand-name">Homestead Honey <span class="straw-id">STRAW-03</span></div>
+      <div class="varietal">Wildflower</div>
+      <div class="producer">Homestead Honey Co.</div>
+      <div class="honey-note">Mississippi regional mix</div>
+    </div>
+    <div class="card-body">
+      <div class="guide">
+        <div class="guide-title">Rate 1–5 on each:</div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Aroma</span><span class="guide-desc"> — smell before tasting</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Sweetness</span><span class="guide-desc"> — light vs bold</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Body</span><span class="guide-desc"> — thin vs syrupy</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Finish</span><span class="guide-desc"> — fades vs lingers</span></div>
+        <div class="guide-item"><div class="guide-dot"></div><span class="guide-label">Would seek out</span><span class="guide-desc"> — vs grocery honey</span></div>
+      </div>
+      <div class="qr-area">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=8&data=https%3A%2F%2FYOUR-APP-URL%2F%3Fkit%3DSTRAW-03"
+             alt="QR code for STRAW-03" />
+        <div class="qr-label">Scan to<br>rate this<br>sample</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="rate-scale"><strong>1</strong> = low &nbsp;·&nbsp; <strong>5</strong> = high</div>
+      <div class="sample-num">03</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="screen-only">
+  <p>Cards look right? Replace <code>YOUR-APP-URL</code> in the HTML, then click Print.</p>
+  <button class="print-btn" onclick="window.print()">🖨 Print Tasting Cards</button>
+</div>
+
+</body>
+</html>
