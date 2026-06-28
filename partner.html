@@ -122,6 +122,13 @@
   <p class="text-center text-xs text-amber-500">We'll follow up within 2 business days to schedule a walkthrough.</p>
 </main>
 
+<form name="partner-application" netlify hidden>
+  <input name="business" /><input name="biztype" /><input name="location" />
+  <input name="name" /><input name="role" /><input name="email" /><input name="phone" />
+  <input name="traffic" /><input name="space" /><input name="demographic" />
+  <input name="model" /><input name="notes" />
+</form>
+
 <div id="thanks" class="hidden max-w-2xl mx-auto px-6 py-20 text-center">
   <div class="text-6xl mb-4">🤝</div>
   <h2 class="text-2xl font-bold text-amber-900 mb-2">Application Received!</h2>
@@ -139,8 +146,6 @@
 </style>
 
 <script>
-const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycby-G45nngxIVQVHn8gjotoDkQTcummCw0Sibmm-OuOZuQtaqkMGUnB_JVV3DnkTalR4IA/exec'
-
 function checked(id) { return document.getElementById(id).checked }
 function val(id)     { return document.getElementById(id).value.trim() }
 
@@ -152,20 +157,23 @@ async function submit() {
   }
   err.classList.add('hidden')
 
-  const payload = {
-    type: 'partner',
+  const fields = {
+    'form-name': 'partner-application',
     business, biztype: val('biztype'), location,
     name, role: val('role'), email, phone: val('phone'),
     traffic: val('traffic'), space: val('space'), demographic: val('demographic'),
     model: ['consignment','wholesale','revshare','events']
       .filter(m => checked('mod_' + m)).join(', '),
     notes: val('notes'),
-    submittedAt: new Date().toISOString()
   }
 
   try {
-    await fetch(SUBMIT_URL, { method:'POST', body: JSON.stringify(payload) })
-  } catch(e) { /* CORS on response is expected — data still posts */ }
+    await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(fields).toString()
+    })
+  } catch(e) { console.log('Submit error:', e.message) }
 
   document.getElementById('formWrap').classList.add('hidden')
   document.getElementById('thanks').classList.remove('hidden')

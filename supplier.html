@@ -183,6 +183,17 @@
   <p class="text-center text-xs text-amber-500">We'll follow up within 2 business days.</p>
 </main>
 
+<!-- Hidden form so Netlify detects it at build time -->
+<form name="supplier-application" netlify hidden>
+  <input name="name" /><input name="business" /><input name="email" />
+  <input name="phone" /><input name="location" /><input name="years" />
+  <input name="hives" /><input name="varietals" /><input name="zipCodes" />
+  <input name="harvest" /><input name="certifications" /><input name="story" />
+  <input name="interest" /><input name="favoriteParts" /><input name="leastFavoriteParts" />
+  <input name="wouldAddHives" /><input name="annualYield" /><input name="sellsWholesale" />
+  <input name="consumerPrice" /><input name="bulkPrice" />
+</form>
+
 <div id="thanks" class="hidden max-w-2xl mx-auto px-6 py-20 text-center">
   <div class="text-6xl mb-4">🍯</div>
   <h2 class="text-2xl font-bold text-amber-900 mb-2">Application Received!</h2>
@@ -199,8 +210,6 @@
 </style>
 
 <script>
-const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycby-G45nngxIVQVHn8gjotoDkQTcummCw0Sibmm-OuOZuQtaqkMGUnB_JVV3DnkTalR4IA/exec'
-
 function checked(id) { return document.getElementById(id).checked }
 function val(id)     { return document.getElementById(id).value.trim() }
 
@@ -212,10 +221,10 @@ async function submit() {
   }
   err.classList.add('hidden')
 
-  const radio = name => (document.querySelector(`input[name="${name}"]:checked`) || {}).value || ''
+  const radio = n => (document.querySelector(`input[name="${n}"]:checked`) || {}).value || ''
 
-  const payload = {
-    type: 'supplier',
+  const fields = {
+    'form-name': 'supplier-application',
     name, business: val('business'), email, phone: val('phone'), location,
     years: val('years'), hives: val('hives'), varietals, zipCodes: val('zipCodes'),
     harvest: val('harvest'), story: val('story'),
@@ -232,11 +241,14 @@ async function submit() {
     sellsWholesale: radio('sellsWholesale'),
     consumerPrice: val('consumerPrice'),
     bulkPrice: val('bulkPrice'),
-    submittedAt: new Date().toISOString()
   }
 
   try {
-    await fetch(SUBMIT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) })
+    await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(fields).toString()
+    })
   } catch(e) { console.log('Submit error:', e.message) }
 
   document.getElementById('formWrap').classList.add('hidden')
