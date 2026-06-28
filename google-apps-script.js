@@ -52,15 +52,15 @@ function appendTasting(ss, data) {
 function appendSupplier(ss, data) {
   const sheet = getOrCreate(ss, SHEETS.SUPPLIER, [
     'Submitted','Name','Business','Email','Phone','Location',
-    'Years Beekeeping','Hives','Varietals','Production (lbs)','Harvest',
-    'Certifications','Wholesale Price','Story','Interests',
+    'Years Beekeeping','Hives','Varietals','Zip Code(s)','Harvest',
+    'Certifications','Story','Interests',
     'Favorite Parts','Least Favorite Parts','Would Add Hives',
     'Annual Yield','Sells Wholesale','Consumer $/lb','Bulk $/lb'
   ])
   sheet.appendRow([
     new Date(data.submittedAt), data.name, data.business, data.email, data.phone, data.location,
-    data.years, data.hives, data.varietals, data.production, data.harvest,
-    data.certifications, data.price, data.story, data.interest,
+    data.years, data.hives, data.varietals, data.zipCodes, data.harvest,
+    data.certifications, data.story, data.interest,
     data.favoriteParts, data.leastFavoriteParts, data.wouldAddHives,
     data.annualYield, data.sellsWholesale, data.consumerPrice, data.bulkPrice
   ])
