@@ -24,7 +24,7 @@ function tastingApp() {
     currentSample: 0, showComplete: false,
     attributes: ATTRIBUTES, samples: [],
     sessionId: null, locationType: 'chamber-event',
-    email: '', emailSaved: false, surveyDone: false, returningVisitor: '',
+    email: '', emailSaved: false, surveyDone: false, returningVisitor: '', submitting: false,
     survey: { buyDecision: '', hadBadHoney: '', likelierIfKnew: '', payMoreIfLiked: '' },
 
     async init() {
@@ -123,6 +123,8 @@ function tastingApp() {
 
     // ── submit + CSV download ───────────────────────────────────────────────
     async submitResults() {
+      if (!this.email) return
+      this.submitting = true
       const payload = {
         sessionId: this.sessionId, locationType: this.locationType,
         email: this.email, returningVisitor: this.returningVisitor,
@@ -133,23 +135,18 @@ function tastingApp() {
           ratings: s.ratings, overall: s.overall, buyAgain: s.buyAgain, notes: s.notes
         }))
       }
-      // try live endpoint if configured
       if (SUBMIT_URL) {
         try {
-          const res = await fetch(SUBMIT_URL, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          })
-          if (!res.ok) throw new Error(`HTTP ${res.status}`)
+          await fetch(SUBMIT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
         } catch (e) {
-          console.log('Submit failed — saving locally:', e.message)
+          console.log('Submit error:', e.message)
         }
       }
-      // always save locally
       const db = await this.getDB()
       await db.put('sessions', { ...payload, sessionId: this.sessionId, updatedAt: Date.now() })
       this.emailSaved = true
       this.surveyDone = true
+      this.submitting = false
       this.saveSession()
     },
 
