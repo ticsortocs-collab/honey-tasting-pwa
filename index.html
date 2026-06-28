@@ -165,9 +165,10 @@
         </select>
       </div>
 
-      <!-- Market research questions — first-timers only, hidden after profile saved -->
-      <div x-show="returningVisitor === 'new' && !surveyDone" class="bg-white rounded-2xl border border-amber-200 p-5 mb-5 text-left space-y-5">
-        <p class="text-xs font-bold text-amber-700 uppercase tracking-wider">Quick questions — 1 min</p>
+      <!-- Market research questions — always shown until profile saved -->
+      <div x-show="!emailSaved" class="bg-white rounded-2xl border border-amber-200 p-5 mb-5 text-left space-y-5">
+        <p x-show="returningVisitor !== 'returning'" class="text-xs font-bold text-amber-700 uppercase tracking-wider">Quick questions — 1 min</p>
+        <p x-show="returningVisitor === 'returning'" class="text-sm text-amber-600 italic">Thanks for being a repeat taster! Feel free to skip these questions and just enter your email below.</p>
 
         <div>
           <p class="text-sm font-semibold text-amber-900 mb-2">Is taste a key factor when you buy honey, or do you just grab what's available?</p>
