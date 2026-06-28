@@ -201,6 +201,49 @@ function generateCards() {
   SpreadsheetApp.getUi().showModelessDialog(output, 'Tasting Cards')
 }
 
+// ── Self-test: run this from the editor BEFORE deploying ──────────────────
+// Dropdown → select testDoPost → click Run.
+// Then check the "Debug Log" tab — you should see three OK rows.
+// If you see errors, the problem is in the code, not the deployment.
+function testDoPost() {
+  const fakeE = contents => ({ postData: { contents: JSON.stringify(contents) } })
+
+  doPost(fakeE({
+    type: 'tasting',
+    sessionId: 'TEST-001', email: 'test@example.com',
+    locationType: 'event', visitorType: 'consumer',
+    completedAt: new Date().toISOString(),
+    survey: { buyDecision: 'yes', hadBadHoney: 'yes', tasteValuedAction: 'buy it' },
+    samples: [{
+      sampleId: 'STRAW-01', varietal: 'Raw Honey', brand: "Bee's Knees",
+      ratings: { aroma: 4, sweetness: 3, body: 3, finish: 4, uniqueness: 4 },
+      overall: 4, buyAgain: true, notes: 'test note'
+    }]
+  }))
+
+  doPost(fakeE({
+    type: 'supplier',
+    name: 'Test Beekeeper', business: 'Test Farm', email: 'bees@example.com',
+    phone: '555-1234', location: 'Vicksburg MS', years: '5', hives: '10',
+    varietals: 'Wildflower', zipCodes: '39180', harvest: 'Fall',
+    certifications: 'raw, local', story: 'Love bees',
+    interest: 'marketplace', favoriteParts: 'tending, eating',
+    leastFavoriteParts: 'selling', wouldAddHives: 'yes',
+    annualYield: '100-250 lbs', sellsWholesale: 'yes',
+    consumerPrice: '12', bulkPrice: '8',
+    submittedAt: new Date().toISOString()
+  }))
+
+  doPost(fakeE({
+    type: 'partner',
+    business: 'Test Café', biztype: 'café/coffee shop', location: 'Jackson MS',
+    name: 'Jane Owner', role: 'Owner', email: 'jane@example.com',
+    phone: '555-9876', traffic: '100-200/day', space: '2 sq ft on counter',
+    demographic: 'foodie locals', model: 'consignment',
+    notes: 'Love local honey', submittedAt: new Date().toISOString()
+  }))
+}
+
 // ── helper: get sheet or create it with headers ───────────────────────────
 function getOrCreate(ss, name, headers) {
   let sheet = ss.getSheetByName(name)
