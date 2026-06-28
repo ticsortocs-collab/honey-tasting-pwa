@@ -44,7 +44,11 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
-        main: 'index.html'
+        main: 'index.html',
+        supplier: 'supplier.html',
+        partner: 'partner.html',
+        print: 'print.html',
+        qr: 'qr.html'
       }
     }
   }
