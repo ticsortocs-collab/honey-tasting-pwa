@@ -19,17 +19,19 @@ function onOpen() {
 
 // ── POST router ───────────────────────────────────────────────────────────
 function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  const log = getOrCreate(ss, 'Debug Log', ['Time','Type','Email','Status','Error'])
   try {
-    const data = JSON.parse(e.postData.contents)
-    Logger.log('doPost received type: ' + data.type + ' from: ' + data.email)
-    const ss = SpreadsheetApp.getActiveSpreadsheet()
+    const raw  = e && e.postData ? e.postData.contents : null
+    if (!raw) throw new Error('e.postData is empty — possible preflight or empty body')
+    const data = JSON.parse(raw)
     if      (data.type === 'supplier') appendSupplier(ss, data)
     else if (data.type === 'partner')  appendPartner(ss, data)
     else                               appendTasting(ss, data)
-    Logger.log('doPost success')
+    log.appendRow([new Date(), data.type || 'tasting', data.email || '', 'OK', ''])
     return ContentService.createTextResponse('ok')
   } catch(err) {
-    Logger.log('doPost ERROR: ' + err.message)
+    log.appendRow([new Date(), '?', '', 'ERROR', err.message])
     return ContentService.createTextResponse('error: ' + err.message)
   }
 }
