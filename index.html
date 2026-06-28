@@ -189,7 +189,7 @@
         </div>
 
         <div>
-          <p class="text-sm font-semibold text-amber-900 mb-2">Have you ever bought a honey you didn't like as much as another?</p>
+          <p class="text-sm font-semibold text-amber-900 mb-2">Have you ever bought a honey and wished you'd picked a different one?</p>
           <div class="space-y-1.5">
             <template x-for="opt in [
               'Yes, several times',
@@ -207,34 +207,16 @@
         </div>
 
         <div>
-          <p class="text-sm font-semibold text-amber-900 mb-2">How much more likely are you to buy a honey if you already know you love the taste?</p>
+          <p class="text-sm font-semibold text-amber-900 mb-2">If you knew you'd love the taste before you bought it, what would you do?</p>
           <div class="space-y-1.5">
             <template x-for="opt in [
-              'Much more likely — that\'s the whole point',
-              'Somewhat more likely',
-              'About the same as usual',
-              'Doesn\'t really change my decision'
+              'Buy it AND pay more for it — taste certainty is worth it',
+              'Buy it for sure, but I\'d still hunt for the best price',
+              'I\'d be more likely to buy it, but price still wins',
+              'Honestly, it wouldn\'t change how I shop'
             ]" :key="opt">
               <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-xl hover:bg-amber-50 transition">
-                <input type="radio" name="likelierIfKnew" :value="opt" x-model="survey.likelierIfKnew"
-                       class="mt-0.5 accent-amber-600 flex-shrink-0" />
-                <span class="text-sm text-stone-700" x-text="opt"></span>
-              </label>
-            </template>
-          </div>
-        </div>
-
-        <div>
-          <p class="text-sm font-semibold text-amber-900 mb-2">If you knew you loved the taste, how likely are you to choose the pricier option?</p>
-          <div class="space-y-1.5">
-            <template x-for="opt in [
-              'Very likely — I\'d pay more for what I know I love',
-              'Maybe, if the price difference isn\'t too big',
-              'Unlikely — price still drives my choice',
-              'I wouldn\'t pay more regardless'
-            ]" :key="opt">
-              <label class="flex items-start gap-2.5 cursor-pointer p-2 rounded-xl hover:bg-amber-50 transition">
-                <input type="radio" name="payMoreIfLiked" :value="opt" x-model="survey.payMoreIfLiked"
+                <input type="radio" name="tasteValuedAction" :value="opt" x-model="survey.tasteValuedAction"
                        class="mt-0.5 accent-amber-600 flex-shrink-0" />
                 <span class="text-sm text-stone-700" x-text="opt"></span>
               </label>

@@ -33,7 +33,7 @@ function appendTasting(ss, data) {
     'Session ID','Email','Completed At','Sample ID','Varietal','Brand',
     'Aroma','Sweetness','Body','Finish','Would Seek Out',
     'Overall','Buy Again','Notes',
-    'Taste Drives Buy?','Had Bad Honey?','Likelier If Knew Taste?','Pay More If Liked?'
+    'Taste Drives Buy?','Had Bad Honey?','If Knew Taste — Would You?'
   ])
   const sv = data.survey || {}
   data.samples.forEach(s => {
@@ -43,7 +43,7 @@ function appendTasting(ss, data) {
       s.ratings?.aroma, s.ratings?.sweetness, s.ratings?.body,
       s.ratings?.finish, s.ratings?.uniqueness,
       s.overall, s.buyAgain ? 'YES' : 'no', s.notes,
-      sv.buyDecision, sv.hadBadHoney, sv.likelierIfKnew, sv.payMoreIfLiked
+      sv.buyDecision, sv.hadBadHoney, sv.tasteValuedAction
     ])
   })
 }

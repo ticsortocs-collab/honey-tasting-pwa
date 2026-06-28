@@ -25,7 +25,7 @@ function tastingApp() {
     attributes: ATTRIBUTES, samples: [],
     sessionId: null, locationType: 'chamber-event',
     email: '', emailSaved: false, surveyDone: false, returningVisitor: '', submitting: false,
-    survey: { buyDecision: '', hadBadHoney: '', likelierIfKnew: '', payMoreIfLiked: '' },
+    survey: { buyDecision: '', hadBadHoney: '', tasteValuedAction: '' },
 
     async init() {
       this.sessionId = 'SESSION-' + Date.now().toString(36).toUpperCase()
