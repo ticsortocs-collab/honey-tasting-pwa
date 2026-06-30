@@ -21,7 +21,7 @@ const SAMPLE_TEMPLATES = [
 
 function tastingApp() {
   return {
-    currentSample: 0, showComplete: false,
+    currentSample: 0, showComplete: false, selecting: true,
     attributes: ATTRIBUTES, samples: [],
     sessionId: null, locationType: 'chamber-event',
     email: '', emailSaved: false, surveyDone: false, visitorType: '', submitting: false,
@@ -52,7 +52,7 @@ function tastingApp() {
       const db = await this.getDB()
       await db.put('sessions', {
         sessionId: this.sessionId, locationType: this.locationType,
-        currentSample: this.currentSample, showComplete: this.showComplete,
+        currentSample: this.currentSample, showComplete: this.showComplete, selecting: this.selecting,
         email: this.email, emailSaved: this.emailSaved,
         visitorType: this.visitorType,
         survey: { ...this.survey },
@@ -66,6 +66,7 @@ function tastingApp() {
       if (saved?.samples) {
         this.currentSample = saved.currentSample || 0
         this.showComplete  = saved.showComplete  || false
+        this.selecting     = saved.selecting ?? true
         this.email         = saved.email         || ''
         this.emailSaved       = saved.emailSaved       || false
         this.visitorType = saved.visitorType || ''
@@ -109,6 +110,10 @@ function tastingApp() {
     setNotes(sampleId, val)  { this.samples.find(x => x.sampleId === sampleId).notes = val; this.saveSession() },
     getNotes(sampleId)       { return this.samples.find(x => x.sampleId === sampleId)?.notes || '' },
 
+    // ── straw selection ──────────────────────────────────────────────────────
+    chooseStraw(idx) { this.currentSample = idx; this.selecting = false; this.saveSession() },
+    backToSelect()   { this.selecting = true; this.saveSession() },
+
     // ── navigation ─────────────────────────────────────────────────────────
     prevSample() { if (this.currentSample > 0)                          { this.currentSample--; this.saveSession() } },
     nextSample() { if (this.currentSample < this.samples.length - 1)    { this.currentSample++; this.saveSession() }
@@ -122,36 +127,46 @@ function tastingApp() {
 
     // ── submit + CSV download ───────────────────────────────────────────────
     async submitResults() {
-      if (!this.email) return
+      if (!this.email || this.submitting) return
       this.submitting = true
       const payload = {
         sessionId: this.sessionId, locationType: this.locationType,
         email: this.email, visitorType: this.visitorType,
         completedAt: new Date().toISOString(),
         survey: { ...this.survey },
-        samples: this.samples.map(s => ({
+        samples: this.samples.filter(s => s.overall > 0).map(s => ({
           sampleId: s.sampleId, varietal: s.varietal, brand: s.brand,
           ratings: s.ratings, overall: s.overall, buyAgain: s.buyAgain, notes: s.notes
         }))
       }
-      if (SUBMIT_URL) {
-        try {
-          await fetch(SUBMIT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-        } catch (e) {
-          console.log('Submit error:', e.message)
+      try {
+        if (SUBMIT_URL) {
+          const ctrl = new AbortController()
+          const timer = setTimeout(() => ctrl.abort(), 8000)
+          try {
+            await fetch(SUBMIT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload), signal: ctrl.signal })
+          } catch (e) {
+            console.log('Submit network note:', e.message)  // opaque/abort — data still posts
+          } finally {
+            clearTimeout(timer)
+          }
         }
+        try {
+          const db = await this.getDB()
+          await db.put('sessions', { ...payload, sessionId: this.sessionId, updatedAt: Date.now() })
+        } catch (e) {
+          console.log('Local save note:', e.message)
+        }
+        this.emailSaved = true
+        this.surveyDone = true
+        this.saveSession()
+      } finally {
+        this.submitting = false
       }
-      const db = await this.getDB()
-      await db.put('sessions', { ...payload, sessionId: this.sessionId, updatedAt: Date.now() })
-      this.emailSaved = true
-      this.surveyDone = true
-      this.submitting = false
-      this.saveSession()
     },
 
     rateAnother() {
-      const firstUnrated = this.samples.findIndex(s => !s.overall)
-      this.currentSample = firstUnrated >= 0 ? firstUnrated : 0
+      this.selecting = true
       this.showComplete = false
       this.saveSession()
     },

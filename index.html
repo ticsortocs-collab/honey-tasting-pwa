@@ -21,11 +21,11 @@
 <div class="min-h-screen flex flex-col">
 
   <!-- HEADER -->
-  <header class="bg-amber-700 text-white p-4 sticky top-0 z-10 shadow-md" x-show="!showComplete">
+  <header class="bg-amber-700 text-white p-4 sticky top-0 z-10 shadow-md" x-show="!showComplete && !selecting">
     <div class="max-w-xl mx-auto flex items-center justify-between">
       <div>
         <h1 class="text-base font-bold leading-tight">Honeycutt Hives &amp; Harvest</h1>
-        <p class="text-amber-200 text-xs">Honey Tasting Experience</p>
+        <p class="text-amber-200 text-xs">Honey Tasting Experience · <span class="italic">Proverbs 24:13</span></p>
       </div>
       <div class="flex items-center gap-2 text-sm">
         <span class="bg-amber-500 px-2.5 py-1 rounded-full font-bold" x-text="currentSample + 1"></span>
@@ -41,8 +41,41 @@
 
   <!-- TASTING CARDS -->
   <main class="flex-1 overflow-y-auto p-4 pb-24 max-w-xl mx-auto w-full">
+
+    <!-- STRAW PICKER -->
+    <div x-show="selecting && !showComplete" class="py-6">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+          <span class="text-3xl">🍯</span>
+        </div>
+        <h2 class="text-2xl font-bold text-amber-900 mb-1">Which straw are you tasting?</h2>
+        <p class="text-amber-600 text-sm">Tap the number on your honey straw.</p>
+      </div>
+      <div class="space-y-3">
+        <template x-for="(sample, idx) in samples" :key="idx">
+          <button @click="chooseStraw(idx)"
+                  class="w-full flex items-center gap-4 bg-white rounded-2xl border border-amber-200 shadow-sm p-4 text-left hover:bg-amber-50 hover:border-amber-400 transition active:scale-[.99]">
+            <span class="flex-shrink-0 w-12 h-12 rounded-xl bg-amber-700 text-white font-extrabold text-lg flex items-center justify-center"
+                  x-text="String(idx + 1).padStart(2,'0')"></span>
+            <span class="flex-1">
+              <span class="block text-lg font-bold text-amber-900" x-text="sample.varietal"></span>
+              <span class="block text-amber-600 text-sm" x-text="sample.brand"></span>
+            </span>
+            <span class="text-amber-400 text-xl" x-show="!getOverall(sample.sampleId)">›</span>
+            <span class="text-green-600 text-sm font-bold" x-show="getOverall(sample.sampleId)">✓ rated</span>
+          </button>
+        </template>
+      </div>
+
+      <!-- Finish — only once at least one straw is rated -->
+      <button x-show="samples.some(s => s.overall > 0)" @click="finish()"
+              class="w-full mt-6 py-3.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-bold shadow-sm">
+        ✓ Done tasting — see my flavor profile →
+      </button>
+    </div>
+
     <template x-for="(sample, idx) in samples" :key="idx">
-      <div x-show="currentSample === idx && !showComplete">
+      <div x-show="currentSample === idx && !showComplete && !selecting">
 
         <article class="bg-white rounded-2xl shadow-sm border border-amber-100 p-5 mb-4">
 
@@ -113,16 +146,16 @@
               placeholder="floral, sweet finish, reminds me of biscuits…"></textarea>
           </div>
 
-          <!-- Prev / Next -->
+          <!-- Back to picker / Done -->
           <div class="flex justify-between pt-3 border-t border-amber-100">
-            <button @click="prevSample()"
-                    :disabled="currentSample === 0"
-                    class="px-6 py-2.5 text-amber-700 border border-amber-300 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:bg-amber-50 transition font-semibold">
-              ← Back
+            <button @click="backToSelect()"
+                    class="px-6 py-2.5 text-amber-700 border border-amber-300 rounded-xl hover:bg-amber-50 transition font-semibold">
+              ← Choose straw
             </button>
-            <button @click="nextSample()"
-                    class="px-6 py-2.5 bg-amber-700 text-white rounded-xl hover:bg-amber-800 transition font-semibold shadow-sm">
-              <span x-text="currentSample === samples.length - 1 ? 'See My Profile →' : 'Next →'"></span>
+            <button @click="backToSelect()"
+                    :disabled="!getOverall(sample.sampleId)"
+                    class="px-6 py-2.5 bg-amber-700 text-white rounded-xl hover:bg-amber-800 transition font-semibold shadow-sm disabled:opacity-40 disabled:cursor-not-allowed">
+              Save &amp; pick next →
             </button>
           </div>
         </article>
@@ -283,6 +316,7 @@
       <div class="mt-8 pt-6 border-t border-amber-100">
         <p class="text-xs text-amber-400">Honeycutt Hives &amp; Harvest · Vicksburg, MS</p>
         <p class="text-xs text-amber-400">Connecting local beekeepers with honey lovers.</p>
+        <p class="text-xs text-amber-500 italic font-semibold mt-1">Proverbs 24:13</p>
       </div>
     </div>
 
