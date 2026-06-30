@@ -28,9 +28,22 @@ function tastingApp() {
     survey: { buyDecision: '', hadBadHoney: '', tasteValuedAction: '' },
 
     async init() {
-      this.sessionId = 'SESSION-' + Date.now().toString(36).toUpperCase()
       const params = new URLSearchParams(window.location.search)
-      if (params.get('kit'))  this.sessionId   = params.get('kit')
+      if (params.get('new')) localStorage.removeItem('honey-session')
+
+      if (params.get('kit')) {
+        this.sessionId = params.get('kit')
+      } else {
+        // Persist the session across page navigation (e.g. opening the supplier
+        // application and coming back) so ratings + ✓ marks aren't lost.
+        let stored = localStorage.getItem('honey-session')
+        if (!stored) {
+          stored = 'SESSION-' + Date.now().toString(36).toUpperCase()
+          localStorage.setItem('honey-session', stored)
+        }
+        this.sessionId = stored
+      }
+
       if (params.get('loc'))  this.locationType = params.get('loc')
       if (params.get('new'))  await this.clearSession()
       this.samples = SAMPLE_TEMPLATES.map(t => ({
