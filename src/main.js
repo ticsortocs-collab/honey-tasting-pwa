@@ -126,9 +126,8 @@ function tastingApp() {
     },
 
     // ── submit + CSV download ───────────────────────────────────────────────
-    async submitResults() {
-      if (!this.email || this.submitting) return
-      this.submitting = true
+    submitResults() {
+      if (!this.email) return
       const payload = {
         sessionId: this.sessionId, locationType: this.locationType,
         email: this.email, visitorType: this.visitorType,
@@ -139,30 +138,19 @@ function tastingApp() {
           ratings: s.ratings, overall: s.overall, buyAgain: s.buyAgain, notes: s.notes
         }))
       }
-      try {
-        if (SUBMIT_URL) {
-          const ctrl = new AbortController()
-          const timer = setTimeout(() => ctrl.abort(), 8000)
-          try {
-            await fetch(SUBMIT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload), signal: ctrl.signal })
-          } catch (e) {
-            console.log('Submit network note:', e.message)  // opaque/abort — data still posts
-          } finally {
-            clearTimeout(timer)
-          }
-        }
-        try {
-          const db = await this.getDB()
-          await db.put('sessions', { ...payload, sessionId: this.sessionId, updatedAt: Date.now() })
-        } catch (e) {
-          console.log('Local save note:', e.message)
-        }
-        this.emailSaved = true
-        this.surveyDone = true
-        this.saveSession()
-      } finally {
-        this.submitting = false
+      // Flip UI immediately — never block the confirmation on network or storage.
+      this.emailSaved = true
+      this.surveyDone = true
+      this.submitting = false
+
+      // Fire-and-forget: data still posts; failures can't freeze the screen.
+      if (SUBMIT_URL) {
+        fetch(SUBMIT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+          .catch(e => console.log('Submit network note:', e.message))
       }
+      this.getDB()
+        .then(db => db.put('sessions', { ...payload, sessionId: this.sessionId, updatedAt: Date.now() }))
+        .catch(e => console.log('Local save note:', e.message))
     },
 
     rateAnother() {
