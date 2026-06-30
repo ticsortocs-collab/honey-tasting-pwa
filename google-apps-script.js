@@ -36,6 +36,39 @@ function doPost(e) {
   }
 }
 
+// ── GET: serve the active Honey Catalog to the tasting app (JSONP) ─────────
+function doGet(e) {
+  let body
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet()
+    body = JSON.stringify({ ok: true, samples: getActiveCatalog(ss) })
+  } catch(err) {
+    body = JSON.stringify({ ok: false, error: err.message, samples: [] })
+  }
+  const cb = e && e.parameter ? e.parameter.callback : null
+  if (cb) return ContentService.createTextOutput(cb + '(' + body + ')')
+    .setMimeType(ContentService.MimeType.JAVASCRIPT)
+  return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON)
+}
+
+function getActiveCatalog(ss) {
+  const sheet = ss.getSheetByName(SHEETS.CATALOG)
+  if (!sheet) return []
+  const rows = sheet.getDataRange().getValues()
+  const head = rows[0].map(h => String(h).toLowerCase().replace(/[^a-z]/g, ''))
+  const col  = k => head.indexOf(k)
+  const ci   = { id: col('sampleid'), varietal: col('varietal'), brand: col('brand'), note: col('tastingnote'), active: col('active') }
+  return rows.slice(1)
+    .filter(r => { const a = r[ci.active]; return a === true || String(a).toUpperCase() === 'TRUE' })
+    .filter(r => String(r[ci.id]).trim() !== '')
+    .map(r => ({
+      sampleId: String(r[ci.id]).trim(),
+      varietal: String(r[ci.varietal]).trim(),
+      brand:    String(r[ci.brand]).trim(),
+      note:     String(r[ci.note]).trim()
+    }))
+}
+
 // ── Consumer tasting results ───────────────────────────────────────────────
 function appendTasting(ss, data) {
   const sheet = getOrCreate(ss, SHEETS.CONSUMER, [

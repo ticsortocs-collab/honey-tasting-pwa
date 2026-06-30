@@ -46,10 +46,36 @@ function tastingApp() {
 
       if (params.get('loc'))  this.locationType = params.get('loc')
       if (params.get('new'))  await this.clearSession()
-      this.samples = SAMPLE_TEMPLATES.map(t => ({
+
+      // Pull the live Honey Catalog (Active=TRUE rows) from the sheet so honeys
+      // are managed there, not in code. Fall back to built-ins if offline.
+      let templates = SAMPLE_TEMPLATES
+      if (SUBMIT_URL) {
+        const cat = await this.loadCatalog(SUBMIT_URL)
+        if (cat && cat.length) templates = cat
+      }
+      this.samples = templates.map(t => ({
         ...t, ratings: {}, overall: 0, buyAgain: false, notes: ''
       }))
       await this.restoreSession()
+    },
+
+    loadCatalog(url) {
+      return new Promise(resolve => {
+        const cb = '__honeyCatalog_' + Date.now().toString(36)
+        const script = document.createElement('script')
+        const done = result => {
+          delete window[cb]
+          script.remove()
+          clearTimeout(timer)
+          resolve(result)
+        }
+        const timer = setTimeout(() => done(null), 5000)
+        window[cb] = data => done(data && data.ok ? data.samples : null)
+        script.onerror = () => done(null)
+        script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb
+        document.head.appendChild(script)
+      })
     },
 
     async getDB() {
@@ -84,7 +110,10 @@ function tastingApp() {
         this.emailSaved       = saved.emailSaved       || false
         this.visitorType = saved.visitorType || ''
         this.survey        = { ...this.survey, ...(saved.survey || {}) }
-        this.samples = this.samples.map((s, i) => ({ ...s, ...saved.samples[i] }))
+        this.samples = this.samples.map(s => {
+          const prev = (saved.samples || []).find(x => x.sampleId === s.sampleId)
+          return prev ? { ...s, ...prev } : s
+        })
       }
     },
 
